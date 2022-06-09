@@ -1,5 +1,5 @@
 import { describe } from 'mocha'
-import { Err, Ok, Result } from './Result'
+import { Err, Ok, Result, ResultHKT } from './Result'
 import { expect } from 'chai'
 
 describe('Result', () => {
@@ -92,14 +92,14 @@ describe('Result', () => {
 
     it('Should return mapping error if its an Err', () => {
       const a = Ok(4)
-      const b = a.then((value) => Err('b'))
+      const b = a.then(() => Err('b'))
 
       expect(b._value).to.eq('b')
     })
 
     it('Should prefer original Err', () => {
       const a = Err('a')
-      const b = a.then((value) => Err('b'))
+      const b = a.then(() => Err('b'))
 
       expect(b._value).to.eq('a')
     })
@@ -110,7 +110,7 @@ describe('Result', () => {
       const a = Ok(2)
       const b = Ok(3)
 
-      const c = a.and(b)
+      const c = a.and<number, ResultHKT<unknown>>(b)
 
       expect(c._value).to.deep.eq([2, 3])
     })
