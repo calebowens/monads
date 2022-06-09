@@ -1,0 +1,1 @@
+export const constant = <A>(a: A) => <B>(b: B) => a

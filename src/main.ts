@@ -1,0 +1,5 @@
+export * from './Applicative'
+export * from './Functor'
+export * from './Monad'
+export * from './Result'
+export * from './Optional'
