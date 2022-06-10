@@ -1,6 +1,12 @@
 # Caleb's Monads
 Error handling monadic patterns and abstract classes for monads
 
+API Docs: [HERE!](https://calebowens.github.io/monads/)
+
+Git Repo: [HERE!](https://github.com/calebowens/monads)
+
+NPM Listing: [HERE!](https://www.npmjs.com/package/monads-co)
+
 ## Uhh, what is a monad? 
 
 Clearly, a monad is a monoid in the category of endofunctors...

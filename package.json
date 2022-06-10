@@ -1,9 +1,20 @@
 {
-  "name": "calebs-monads",
+  "name": "monads-co",
   "version": "1.0.0",
   "description": "An implementation of Haskell's type classes in TS",
   "main": "out/main.js",
   "author": "Caleb Owens <hello@calebowens.com>",
+  "repository": "https://github.com/calebowens/monads",
+  "website": "https://calebowens.github.io/monads/",
+  "keywords": [
+    "Result",
+    "Optional",
+    "Error Handling",
+    "Monadic Patterns",
+    "Monads",
+    "Applicative",
+    "Functor"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc",
