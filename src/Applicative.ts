@@ -13,17 +13,17 @@ export abstract class Applicative<A> extends Functor<A> {
 
   static liftToApplicative<A, B, C, App extends ApplicativeHKT>(fn: (value: A) => (value: B) => C):
     (a: CallHKT<App, A>) => (b: CallHKT<App, B>) => CallHKT<App, C> {
-    return (a: CallHKT<App, A>) => (b: CallHKT<App, B>) => b.amap(a.map(
+    return (a: CallHKT<App, A>) => (b: CallHKT<App, B>) => b.amap<CallHKT<App, (value: B) => C>, App>(a.map<(value: B) => C, App>(
       // @ts-ignore
       fn
     ))
   }
 
-  andLeft<B, App extends ApplicativeHKT>(b: CallHKT<App, B>): CallHKT<App, A> {
+  andIgnoreRight<B, App extends ApplicativeHKT>(b: CallHKT<App, B>): CallHKT<App, A> {
     return Applicative.liftToApplicative<A, B, A, App>((a) => (b) => constant(a)(b))(this)(b)
   }
 
-  andRight<B, App extends ApplicativeHKT>(b: CallHKT<App, B>): CallHKT<App, B> {
+  andIgnoreLeft<B, App extends ApplicativeHKT>(b: CallHKT<App, B>): CallHKT<App, B> {
     return Applicative.liftToApplicative<A, B, B, App>((a) => (b) => constant(b)(a))(this)(b)
   }
 

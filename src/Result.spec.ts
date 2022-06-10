@@ -47,13 +47,13 @@ describe('Result', () => {
       expect(b._value).to.eq('b')
     })
 
-    it('Should return value error if both are Err', () => {
+    it('Should return mapping error if both are Err', () => {
       const a = Err<number, string>('a')
       const fn = Err<(value: number) => number, string>('b')
 
       const b = a.amap(fn)
 
-      expect(b._value).to.eq('a')
+      expect(b._value).to.eq('b')
     })
   })
 
@@ -113,6 +113,174 @@ describe('Result', () => {
       const c = a.and<number, ResultHKT<unknown>>(b)
 
       expect(c._value).to.deep.eq([2, 3])
+    })
+
+    it('Should Err if Left is Err', () => {
+      const a = Err('a')
+      const b = Ok<number, string>(3)
+
+      const c = a.and<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+
+    it('Should Err if Right is Err', () => {
+      const a = Ok(2)
+      const b = Err<number, string>('b')
+
+      const c = a.and<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('b')
+    })
+
+    it('Should Err if Left if both are Err', () => {
+      const a = Err('a')
+      const b = Err('b')
+
+      const c = a.and<unknown, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+  })
+
+  describe('#andIgnoreRight', () => {
+
+    it('Should form Ok(a) from Ok(a) and Ok(b)', () => {
+      const a = Ok(2)
+      const b = Ok(3)
+
+      const c = a.andIgnoreRight<number, ResultHKT<unknown>>(b)
+
+      expect(c._value).to.eq(2)
+    })
+
+    it('Should Err if Left is Err', () => {
+      const a = Err('a')
+      const b = Ok<number, string>(3)
+
+      const c = a.andIgnoreRight<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+
+    it('Should Err if Right is Err', () => {
+      const a = Ok(2)
+      const b = Err<number, string>('b')
+
+      const c = a.andIgnoreRight<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('b')
+    })
+
+    it('Should Err if Left if both are Err', () => {
+      const a = Err('a')
+      const b = Err('b')
+
+      const c = a.andIgnoreRight<unknown, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+  })
+
+
+  describe('#andIgnoreLeft', () => {
+
+    it('Should form Ok(b) from Ok(a) and Ok(b)', () => {
+      const a = Ok(2)
+      const b = Ok(3)
+
+      const c = a.andIgnoreLeft<number, ResultHKT<unknown>>(b)
+
+      expect(c._value).to.eq(3)
+    })
+
+    it('Should Err if Left is Err', () => {
+      const a = Err('a')
+      const b = Ok<number, string>(3)
+
+      const c = a.andIgnoreLeft<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+
+    it('Should Err if Right is Err', () => {
+      const a = Ok(2)
+      const b = Err<number, string>('b')
+
+      const c = a.andIgnoreLeft<number, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('b')
+    })
+
+    it('Should Err if Left if both are Err', () => {
+      const a = Err('a')
+      const b = Err('b')
+
+      const c = a.andIgnoreLeft<unknown, ResultHKT<string>>(b)
+
+      expect(c._value).to.eq('a')
+    })
+  })
+
+  describe('#catch', () => {
+    it('Should do nothing if LHS Ok', () => {
+      const a = Ok<number, string>(2)
+
+      const b = a.catch(() => 3)
+
+      expect(b._value).to.eq(2)
+    })
+
+    it('Should map error if LHS Err', () => {
+      const a = Err<number, string>('a')
+
+      const b = a.catch((error) => error === 'a' ? 1 : 2)
+
+      expect(b._value).to.eq(1)
+    })
+  })
+
+  describe('#catchThen', () => {
+    it('Should do nothing if LHS Ok', () => {
+      const a = Ok<number, string>(2)
+
+      const b = a.catchThen(() => Ok(3))
+
+      expect(b._value).to.eq(2)
+    })
+
+    it('Should return Ok if mapping Ok if LHS Err', () => {
+      const a = Err<number, string>('a')
+
+      const b = a.catchThen((error) => Ok(error === 'a' ? 1 : 2))
+
+      expect(b._value).to.eq(1)
+    })
+
+    it('Should return Err if mapping Err if LHS Err', () => {
+      const a = Err<number, string>('a')
+
+      const b = a.catchThen((error) => Err('b'))
+
+      expect(b._value).to.eq('b')
+    })
+  })
+
+  describe('#toOptional', () => {
+    it('Should return Some(T) for Ok(T)', () => {
+      const a = Ok<number, string>(2)
+
+      const b = a.toOptional()
+
+      expect(b._value).to.eq(2)
+    })
+
+    it('Should return None for Err', () => {
+      const a = Err<number, string>('b')
+
+      const b = a.toOptional()
+
+      expect(b._value).to.eq(null)
     })
   })
 })

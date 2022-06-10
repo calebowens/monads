@@ -1,4 +1,8 @@
-import { Monad } from './Monad'
+import { Monad, MonadHKT } from './Monad'
+
+export interface OptionalHKT extends MonadHKT {
+  output: Optional<this["input"]>
+}
 
 export class Optional<ValueT> extends Monad<ValueT> {
   constructor(public _success: boolean, public _value: ValueT | undefined | null) {
@@ -87,7 +91,11 @@ export class Optional<ValueT> extends Monad<ValueT> {
    * @param mapping
    */
   catch<NewErrorT>(mapping: () => ValueT): Optional<ValueT> {
-    return this.map(mapping)
+    if (this._success) {
+      return Some(this._value as ValueT)
+    }
+
+    return Some(mapping())
   }
 
   /**

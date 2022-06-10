@@ -66,4 +66,4 @@ const content = safeQuerySelect('#my-input')
 
 ### Error handling
 
-When you use `new Date()` in your code its safe right? No, the constructor for Date can actually throw 
+Its basically the same as Rust's... TODO: Write docs form Result\<ValueT, ErrorT\>

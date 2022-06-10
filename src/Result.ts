@@ -1,9 +1,5 @@
 import { Monad, MonadHKT } from './Monad'
 import { None, Optional, Some } from './Optional'
-import { constant } from './constant'
-import { Functor } from './Functor'
-import { ApplicativeHKT } from './Applicative'
-
 
 export interface ResultHKT<ErrorT> extends MonadHKT {
   output: Result<this["input"], ErrorT>
@@ -52,7 +48,9 @@ export class Result<ValueT, ErrorT> extends Monad<ValueT> {
           (mapping._value as (value: ValueT) => B)(this._value as ValueT)
         )
       }
+    }
 
+    if (!mapping._success) {
       return Err(mapping._value as ErrorT)
     }
 
